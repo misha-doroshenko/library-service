@@ -18,6 +18,13 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
 
+    def validate(self, attrs):
+        if attrs["book"].inventory == 0:
+            raise serializers.ValidationError(
+                "The book is not available"
+            )
+        return attrs
+
     class Meta:
         model = Borrowing
         fields = ("book", "expected_return_date")
@@ -34,7 +41,7 @@ class BorrowingListSerializer(serializers.ModelSerializer):
         fields = ("id",
                   "borrow_date",
                   "expected_return_date",
-                   "actual_return_date",
+                  "actual_return_date",
                   "book",
                   "author",
                   "user",)
