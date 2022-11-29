@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -19,6 +20,14 @@ class BorrowingViewSet(
     queryset = Borrowing.objects.select_related("book", "user")
     serializer_class = BorrowingSerializer
     permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Borrowing.objects.select_related("book", "user")
+
+        if not self.request.user.is_staff:
+            return queryset.filter(user=self.request.user)
+
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
