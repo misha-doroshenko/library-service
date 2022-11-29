@@ -24,7 +24,7 @@ class BorrowingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ("id", "book", "author")
+        fields = ("id", "book", "author", "user")
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
