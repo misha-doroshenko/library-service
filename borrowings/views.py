@@ -25,12 +25,16 @@ class BorrowingViewSet(
         queryset = Borrowing.objects.select_related("book", "user")
 
         if not self.request.user.is_staff:
-            return queryset.filter(user=self.request.user)
+            queryset = queryset.filter(user=self.request.user)
 
+        user_id = self.request.query_params.get("user_id")
         is_active = self.request.query_params.get("is_active")
 
         if is_active:
-            return queryset.filter(actual_return_date=None)
+            queryset = queryset.filter(actual_return_date=None)
+
+        if self.request.user.is_staff and user_id:
+            queryset = queryset.filter(user_id=int(user_id))
 
         return queryset
 
