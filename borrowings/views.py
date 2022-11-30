@@ -2,6 +2,7 @@ from django.contrib.admin import actions
 from django.contrib.auth import get_user_model
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -65,6 +66,7 @@ class BorrowingViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
     @action(
         methods=["PUT"],
         detail=True,
@@ -84,3 +86,20 @@ class BorrowingViewSet(
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "is_active",
+                type=str,
+                description="Filter by borrowed book status (ex. ?is_active=None)",
+            ),
+            OpenApiParameter(
+                "is_staff",
+                type=int,
+                description="Filter by user (ex. ?user_id=1)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
