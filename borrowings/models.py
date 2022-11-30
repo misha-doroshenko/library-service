@@ -35,6 +35,7 @@ class Borrowing(models.Model):
         message = create_message(self.expected_return_date,
                                  self.book.title,
                                  self.user)
+        send_message(message)
         self.book.inventory -= 1
         self.book.save()
         super(Borrowing, self).save(*args, **kwargs)
