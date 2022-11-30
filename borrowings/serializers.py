@@ -16,6 +16,20 @@ class BorrowingSerializer(serializers.ModelSerializer):
         )
 
 
+class BorrowingCreateSerializer(serializers.ModelSerializer):
+
+    def validate(self, attrs):
+        if attrs["book"].inventory == 0:
+            raise serializers.ValidationError(
+                "The book is not available"
+            )
+        return attrs
+
+    class Meta:
+        model = Borrowing
+        fields = ("book", "expected_return_date")
+
+
 class BorrowingListSerializer(serializers.ModelSerializer):
     book = serializers.SlugRelatedField(
         many=False, read_only=True, slug_field="title"
@@ -24,7 +38,10 @@ class BorrowingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ("id", "book", "author", "user")
+        fields = ("id",
+                  "book",
+                  "author",
+                  "user",)
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
