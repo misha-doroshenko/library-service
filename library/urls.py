@@ -33,7 +33,6 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc"
     ),
-    path("__debug__/", include("debug_toolbar.urls")),
     path("api/payments/", include("payments.urls", namespace="payments")),
     path('__debug__/', include('debug_toolbar.urls')),
 ]

@@ -18,7 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-=^ztl#j8$jy%bqjt8(3lft38@$$iik9nfy$#vssz5$4^^m!85b"
+SECRET_KEY = (
+    "django-insecure-=^ztl#j8$jy%bqjt8(3lft38@$$iik9nfy$#vssz5$4^^m!85b"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "debug_toolbar",
     "rest_framework",
+    "drf_spectacular",
     "books",
     "user",
     "borrowings",
@@ -139,8 +142,9 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "library.permissions.IsAdminOrReadOnly",
+    ],
+}
 
-    ]
 }
 
 SPECTACULAR_SETTINGS = {
