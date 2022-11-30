@@ -17,12 +17,9 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
-
     def validate(self, attrs):
         if attrs["book"].inventory == 0:
-            raise serializers.ValidationError(
-                "The book is not available"
-            )
+            raise serializers.ValidationError("The book is not available")
         return attrs
 
     class Meta:
@@ -38,10 +35,12 @@ class BorrowingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ("id",
-                  "book",
-                  "author",
-                  "user",)
+        fields = (
+            "id",
+            "book",
+            "author",
+            "user",
+        )
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
