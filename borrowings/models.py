@@ -29,3 +29,8 @@ class Borrowing(models.Model):
             f"{self.book.title} was borrow {self.borrow_date}"
             f" expected return {self.expected_return_date}"
         )
+
+    def save(self, *args, **kwargs):
+        self.book.inventory -= 1
+        self.book.save()
+        super(Borrowing, self).save(*args, **kwargs)
