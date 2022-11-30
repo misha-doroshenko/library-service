@@ -39,12 +39,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "drf_spectacular",
     "debug_toolbar",
     "rest_framework",
     "drf_spectacular",
     "books",
     "user",
     "borrowings",
+    "payments",
 ]
 
 MIDDLEWARE = [
@@ -139,20 +141,13 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "library.permissions.IsAdminOrReadOnly",
-    ],
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Library service API",
-    "DESCRIPTION": "manage for borrowings in local library",
+    "TITLE": "Library Service API",
+    "DESCRIPTION": "Books borrowing service",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SWAGER_UI_SETTINGS": {
-        "deepLinking": True,
-        "defaultModelRendering": "model",
-        "defaultModelsExpandDepth": 2,
-        "defaultModelExpandDepth": 2,
-    },
 }
 
 SIMPLE_JWT = {
