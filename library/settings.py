@@ -143,8 +143,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Cinema API",
-    "DESCRIPTION": "Order tickets for ur movie session",
+    "TITLE": "Library service API",
+    "DESCRIPTION": "manage for borrowings in local library",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGER_UI_SETTINGS": {
