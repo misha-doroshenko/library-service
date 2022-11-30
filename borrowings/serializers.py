@@ -1,4 +1,7 @@
+import datetime
+
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from borrowings.models import Borrowing
 
@@ -61,3 +64,16 @@ class BorrowingDetailSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
         )
+
+
+class BorrowingReturnSerializer(serializers.ModelSerializer):
+    actual_return_date = serializers.DateField()
+
+    class Meta:
+        model = Borrowing
+        fields = ("actual_return_date",)
+
+    def validate(self, attrs):
+        if attrs["actual_return_date"] < datetime.date.today():
+            raise ValidationError("U can't go back in time" " date is wrong!")
+        return super(BorrowingReturnSerializer, self).validate(attrs)
