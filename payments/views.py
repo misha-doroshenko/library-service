@@ -1,12 +1,14 @@
-import stripe
-from django.conf import settings
 from rest_framework import mixins, viewsets, status
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from payments.models import Payment
-from payments.serializers import PaymentSerializer, PaymentDetailSerializer, PaymentListSerializer
+from payments.serializers import (
+    PaymentSerializer,
+    PaymentDetailSerializer,
+    PaymentListSerializer,
+)
 
 
 class PaymentViewSet(
@@ -44,3 +46,10 @@ def success_payment(request, *args, **kwargs):
         serializer = PaymentDetailSerializer(payment)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["GET"])
+def cancel_payment(request):
+    message = ("payment can be paid a bit later"
+               "(but the session is available for only 24h)")
+    return Response(message, status=status.HTTP_200_OK)
