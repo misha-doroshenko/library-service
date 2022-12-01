@@ -1,13 +1,16 @@
+import stripe
+from django.conf import settings
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from payments.models import Payment
-from payments.serializers import PaymentSerializer, PaymentDetailSerializer
+from payments.serializers import PaymentSerializer, PaymentDetailSerializer, PaymentListSerializer
 
 
 class PaymentViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
     model = Payment
@@ -23,7 +26,8 @@ class PaymentViewSet(
         return queryset
 
     def get_serializer_class(self):
+        if self.action in ["list", "create"]:
+            return PaymentListSerializer
         if self.action == "retrieve":
             return PaymentDetailSerializer
-
         return PaymentSerializer
