@@ -10,7 +10,6 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Payment
         fields = (
@@ -27,7 +26,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             "borrowing",
             "session_url",
             "session_id",
-            "money_to_pay"
+            "money_to_pay",
         )
 
 
@@ -42,11 +41,7 @@ class PaymentListSerializer(serializers.ModelSerializer):
             "session_id",
             "money_to_pay",
         )
-        read_only_fields = (
-            "session_url",
-            "session_id",
-            "money_to_pay"
-        )
+        read_only_fields = ("session_url", "session_id", "money_to_pay")
 
     def create(self, validated_data):
         status = validated_data["status"]
@@ -55,11 +50,14 @@ class PaymentListSerializer(serializers.ModelSerializer):
         money_to_pay = borrowing.book.daily_fee * 7
 
         session = stripe.checkout.Session.create(
-            line_items=[{
-                'price_data': {
-                    'currency': 'usd',
-                    'product_data': {
-                        'name': borrowing.book.title,
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "usd",
+                        "product_data": {
+                            "name": borrowing.book.title,
+                        },
+                        "unit_amount": int(money_to_pay * 100),
                     },
                     'unit_amount': int(money_to_pay * 100),
                 },
@@ -75,7 +73,7 @@ class PaymentListSerializer(serializers.ModelSerializer):
             borrowing=borrowing,
             session_url=session.url,
             session_id=session.id,
-            money_to_pay=money_to_pay
+            money_to_pay=money_to_pay,
         )
 
 
