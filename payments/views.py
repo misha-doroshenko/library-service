@@ -1,10 +1,12 @@
-import stripe
-from django.conf import settings
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from payments.models import Payment
-from payments.serializers import PaymentSerializer, PaymentDetailSerializer, PaymentListSerializer
+from payments.serializers import (
+    PaymentSerializer,
+    PaymentDetailSerializer,
+    PaymentListSerializer,
+)
 
 
 class PaymentViewSet(
