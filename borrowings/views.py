@@ -14,6 +14,8 @@ from borrowings.serializers import (
     BorrowingCreateSerializer,
     BorrowingReturnSerializer,
 )
+from payments.models import Payment
+from payments.serializers import PaymentListSerializer
 
 
 class BorrowingViewSet(
@@ -84,8 +86,19 @@ class BorrowingViewSet(
                 book.inventory += 1
                 book.save()
                 serializer.save()
+                if borrowing.overdue:
+                    fine = borrowing.book.daily_fee * borrowing.overdue * 2
+                    payment = Payment.objects.create(
+                        type="Pending",
+                        status="Fine",
+                        borrowing=borrowing,
+                        money_to_pay=fine
+                    )
+                    serializer = PaymentListSerializer(payment)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     @extend_schema(
         parameters=[

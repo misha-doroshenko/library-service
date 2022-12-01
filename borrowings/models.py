@@ -34,3 +34,8 @@ class Borrowing(models.Model):
         self.book.inventory -= 1
         self.book.save()
         super(Borrowing, self).save(*args, **kwargs)
+
+    @property
+    def overdue(self):
+        overdue = datetime.date.today() - self.expected_return_date
+        return self.expected_return_date > datetime.date.today() and overdue.days
