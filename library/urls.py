@@ -21,6 +21,8 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
+from payments.views import success_payment, cancel_payment
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/books/", include("books.urls", namespace="books")),
@@ -40,5 +42,7 @@ urlpatterns = [
         name="redoc",
     ),
     path("api/payments/", include("payments.urls", namespace="payments")),
-    path("__debug__/", include("debug_toolbar.urls")),
+    path("api/success/", success_payment, name="success"),
+    path("api/cancel", cancel_payment, name="cansel"),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]

@@ -59,12 +59,13 @@ class PaymentListSerializer(serializers.ModelSerializer):
                         },
                         "unit_amount": int(money_to_pay * 100),
                     },
-                    "quantity": 1,
-                }
-            ],
-            mode="payment",
-            success_url="http://localhost:4242/success",
-            cancel_url="http://localhost:4242/cancel",
+                    'unit_amount': int(money_to_pay * 100),
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url="http://127.0.0.1:8000/api/success?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url="http://127.0.0.1:8000/api/cancel",
         )
         return Payment.objects.create(
             status=status,
