@@ -1,7 +1,9 @@
 import stripe
 from django.conf import settings
-from rest_framework import mixins, viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import mixins, viewsets, status
+from rest_framework.decorators import action, api_view
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
 
 from payments.models import Payment
 from payments.serializers import PaymentSerializer, PaymentDetailSerializer, PaymentListSerializer
@@ -16,7 +18,7 @@ class PaymentViewSet(
     model = Payment
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         queryset = Payment.objects.select_related("borrowing")
@@ -28,6 +30,17 @@ class PaymentViewSet(
     def get_serializer_class(self):
         if self.action in ["list", "create"]:
             return PaymentListSerializer
-        if self.action == "retrieve":
+        if self.action in ("retrieve", "success"):
             return PaymentDetailSerializer
         return PaymentSerializer
+
+
+@api_view(["GET"])
+def success_payment(request, *args, **kwargs):
+    session_id = request.query_params.get("session_id", "")
+    if session_id:
+        payment = Payment.objects.get(session_id=session_id)
+        payment.status = "Paid"
+        serializer = PaymentDetailSerializer(payment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_404_NOT_FOUND)

@@ -17,6 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+from payments.views import success_payment
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/books/", include("books.urls", namespace="books")),
