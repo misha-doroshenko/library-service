@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "debug_toolbar",
     "rest_framework",
-    "drf_spectacular",
     "books",
     "user",
     "borrowings",
@@ -145,7 +144,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-}
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Library Service API",
