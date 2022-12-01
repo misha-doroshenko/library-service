@@ -51,6 +51,8 @@ def success_payment(request, *args, **kwargs):
 
 @api_view(["GET"])
 def cancel_payment(request):
-    message = ("payment can be paid a bit later"
-               "(but the session is available for only 24h)")
+    message = (
+        "payment can be paid a bit later"
+        "(but the session is available for only 24h)"
+    )
     return Response(message, status=status.HTTP_200_OK)

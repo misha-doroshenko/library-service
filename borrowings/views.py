@@ -1,4 +1,6 @@
 import datetime
+
+from django.db import transaction
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -13,7 +15,9 @@ from borrowings.serializers import (
     BorrowingDetailSerializer,
     BorrowingCreateSerializer,
     BorrowingReturnSerializer,
+    borrowing_pay_session,
 )
+from payments.models import Payment
 
 
 class BorrowingViewSet(
@@ -84,6 +88,19 @@ class BorrowingViewSet(
             borrowing.actual_return_date = datetime.date.today()
             book.save()
             borrowing.save()
+            if borrowing.overdue:
+                with transaction.atomic():
+                    session_id, session_url = borrowing_pay_session(
+                        book, borrowing.overdue
+                    )
+                    Payment.objects.create(
+                        status="PENDING",
+                        type="FINE",
+                        borrowing=borrowing,
+                        session_url=session_url,
+                        session_id=session_id,
+                        money_to_pay=borrowing.overdue,
+                    )
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
