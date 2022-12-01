@@ -14,14 +14,16 @@ class Migration(migrations.Migration):
             model_name="payment",
             name="status",
             field=models.CharField(
-                choices=[("PENDING", "Pending"), ("PAID", "Paid")], max_length=7
+                choices=[("PENDING", "Pending"), ("PAID", "Paid")],
+                max_length=7,
             ),
         ),
         migrations.AlterField(
             model_name="payment",
             name="type",
             field=models.CharField(
-                choices=[("PAYMENT", "Payment"), ("FINE", "Fine")], max_length=7
+                choices=[("PAYMENT", "Payment"), ("FINE", "Fine")],
+                max_length=7,
             ),
         ),
     ]

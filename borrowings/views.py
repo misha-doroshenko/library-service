@@ -1,8 +1,8 @@
-from django.contrib.admin import actions
-from django.contrib.auth import get_user_model
+import datetime
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -68,36 +68,27 @@ class BorrowingViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
     @action(
-        methods=["PUT"],
+        methods=["POST"],
         detail=True,
         url_path="return-book",
         permission_classes=[IsAuthenticated],
     )
     def return_book(self, request, pk=None):
         """endpoint for return borrowed book"""
-        borrowing = self.get_object()
-        serializer = self.get_serializer(borrowing, data=self.request.data)
+        borrowing = get_object_or_404(Borrowing, pk=pk)
         book = borrowing.book
 
-        if serializer.is_valid():
-            if not borrowing.actual_return_date:
-                book.inventory += 1
-                book.save()
-                serializer.save()
-                if borrowing.overdue:
-                    fine = borrowing.book.daily_fee * borrowing.overdue * 2
-                    payment = Payment.objects.create(
-                        type="Pending",
-                        status="Fine",
-                        borrowing=borrowing,
-                        money_to_pay=fine
-                    )
-                    serializer = PaymentListSerializer(payment)
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(borrowing, data=self.request.data)
+
+        if not borrowing.actual_return_date and serializer.is_valid():
+            book.inventory += 1
+            borrowing.actual_return_date = datetime.date.today()
+            book.save()
+            borrowing.save()
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
     @extend_schema(
