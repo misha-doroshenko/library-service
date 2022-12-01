@@ -158,5 +158,8 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
 }
 
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+BOT_CHAT_ID = os.environ.get("BOT_CHAT_ID")
+
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")

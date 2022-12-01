@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 
 from books.models import Book
+from borrowings.notification.bot import create_message, send_message
 from library import settings
 
 
@@ -31,6 +32,10 @@ class Borrowing(models.Model):
         )
 
     def save(self, *args, **kwargs):
+        message = create_message(self.expected_return_date,
+                                 self.book.title,
+                                 self.user)
+        send_message(message)
         self.book.inventory -= 1
         self.book.save()
         super(Borrowing, self).save(*args, **kwargs)
