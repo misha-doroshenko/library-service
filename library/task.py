@@ -19,7 +19,12 @@ def daily_message():
     )
     if queryset:
         for borriwing in queryset:
-            message = create_daily_message(borriwing.expected_return_date, borriwing.borrow_date, borriwing.book.title, borriwing.user)
+            message = create_daily_message(
+                borriwing.expected_return_date,
+                borriwing.borrow_date,
+                borriwing.book.title,
+                borriwing.user
+            )
             send_message(message)
     else:
         send_message("No borrowings overdue today!")
