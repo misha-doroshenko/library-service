@@ -14,6 +14,8 @@ from borrowings.serializers import (
     BorrowingCreateSerializer,
     BorrowingReturnSerializer,
 )
+from payments.models import Payment
+from payments.serializers import PaymentListSerializer
 
 
 class BorrowingViewSet(
@@ -87,6 +89,7 @@ class BorrowingViewSet(
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
     @extend_schema(
         parameters=[

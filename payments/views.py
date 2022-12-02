@@ -44,6 +44,7 @@ def success_payment(request, *args, **kwargs):
     if session_id:
         payment = Payment.objects.get(session_id=session_id)
         payment.status = "Paid"
+        payment.save()
         serializer = PaymentDetailSerializer(payment)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)
