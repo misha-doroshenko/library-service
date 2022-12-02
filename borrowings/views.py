@@ -5,7 +5,7 @@ from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
@@ -28,7 +28,6 @@ class BorrowingViewSet(
 ):
     queryset = Borrowing.objects.select_related("book", "user")
     serializer_class = BorrowingSerializer
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = Borrowing.objects.select_related("book", "user")
@@ -62,11 +61,6 @@ class BorrowingViewSet(
 
         return BorrowingSerializer
 
-    def get_permissions(self):
-        if self.action in ("create", "update"):
-            return [IsAuthenticated()]
-        return super().get_permissions()
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -74,7 +68,7 @@ class BorrowingViewSet(
         methods=["POST"],
         detail=True,
         url_path="return-book",
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAdminUser],
     )
     def return_book(self, request, pk=None):
         """endpoint for return borrowed book"""

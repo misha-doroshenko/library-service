@@ -1,6 +1,5 @@
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 
@@ -21,7 +20,6 @@ class PaymentViewSet(
     model = Payment
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         queryset = Payment.objects.select_related("borrowing")
@@ -44,6 +42,7 @@ def success_payment(request, *args, **kwargs):
     if session_id:
         payment = Payment.objects.get(session_id=session_id)
         payment.status = "Paid"
+        payment.save()
         serializer = PaymentDetailSerializer(payment)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)

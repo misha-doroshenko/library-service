@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "user",
     "borrowings",
     "payments",
+    "django_q",
 ]
 
 MIDDLEWARE = [
@@ -117,7 +118,7 @@ AUTH_USER_MODEL = "user.User"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Kiev"
 
 USE_I18N = True
 
@@ -140,7 +141,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "library.permissions.IsAdminOrReadOnly",
+        "rest_framework.permissions.IsAuthenticated",
     ],
 }
 
@@ -163,3 +164,8 @@ BOT_CHAT_ID = os.environ.get("BOT_CHAT_ID")
 
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+
+Q_CLUSTER = {
+    "name": "library",
+    "orm": "default",  # Use Django's ORM + database for broker
+}

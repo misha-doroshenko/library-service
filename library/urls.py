@@ -45,4 +45,5 @@ urlpatterns = [
     path("api/success/", success_payment, name="success"),
     path("api/cancel", cancel_payment, name="cansel"),
     path("__debug__/", include("debug_toolbar.urls")),
+
 ]
