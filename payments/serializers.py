@@ -50,14 +50,11 @@ class PaymentListSerializer(serializers.ModelSerializer):
         money_to_pay = borrowing.book.daily_fee * 7
 
         session = stripe.checkout.Session.create(
-            line_items=[
-                {
-                    "price_data": {
-                        "currency": "usd",
-                        "product_data": {
-                            "name": borrowing.book.title,
-                        },
-                        "unit_amount": int(money_to_pay * 100),
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': borrowing.book.title,
                     },
                     'unit_amount': int(money_to_pay * 100),
                 },
@@ -66,6 +63,7 @@ class PaymentListSerializer(serializers.ModelSerializer):
             mode='payment',
             success_url="http://127.0.0.1:8000/api/success?session_id={CHECKOUT_SESSION_ID}",
             cancel_url="http://127.0.0.1:8000/api/cancel",
+
         )
         return Payment.objects.create(
             status=status,
